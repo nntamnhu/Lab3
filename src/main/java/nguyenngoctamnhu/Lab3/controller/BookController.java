@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class BookController {
 
     @Autowired
     private CategoryService categoryService;
+
+
 
     @GetMapping
     public String showAllBooks(Model model) {
@@ -48,21 +51,36 @@ public class BookController {
         return "redirect:/books";
     }
 
+
     @GetMapping("/edit/{id}")
-    public String editBookForm(@PathVariable("id") Long id, Model model) {
+    public String editBookForm(@PathVariable("id") Long id, Model model){
         Book book = bookService.getBookById(id);
-        List<Category> categories = categoryService.getAllCategories();
+        if (book == null) {
+            return "notfound";
 
-        model.addAttribute("book", book);
-        model.addAttribute("categories", categories);
-
-        return "book/edit";
+        } else {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("selectedCategoryId", book.getCategory().getId());
+            model.addAttribute("book", book);
+            return "book/edit";
+        }
     }
 
     @PostMapping("/edit")
-    public String editBook(@ModelAttribute("book") Book updateBook) {
-        bookService.updateBook(updateBook);
-
+    public String editBook(@ModelAttribute("book") Book book){
+        bookService.updateBook(book);
         return "redirect:/books";
     }
+
+    @GetMapping("/delete/{id}")
+    public String deletebook(@PathVariable("id") Long id) {
+        Book book = bookService.getBookById(id);
+        if (book == null) {
+            return "notfound";
+        } else {
+            bookService.deleteBook(id);
+            return "redirect:/books";
+        }
+    }
+
 }

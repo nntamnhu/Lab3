@@ -31,7 +31,7 @@
                         th:text="${category.name}"></option>
             </select>
         </div>
-        <input type="submit" class="btn btn-primary" value="Save">
+        <button type="submit">Save</button>
     </form>
     <br>
     <a th:href="@{/books}">Back to List</a>
@@ -39,3 +39,4 @@
 <th:block th:replace="layout :: footer"></th:block>
 </body>
 </html>
+
