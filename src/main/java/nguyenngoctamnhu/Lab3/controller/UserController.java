@@ -28,11 +28,11 @@ public class UserController {
     }
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldError().forEach(error
-                    -> model.addAttribute(error.getField() + "_error", error.getDefaultMessage()));
-            return "user/register";
-        }
+//        if (bindingResult.hasErrors()) {
+//            bindingResult.getFieldError().forEach(error
+//                    -> model.addAttribute(error.getField() + "_error", error.getDefaultMessage()));
+//            return "user/register";
+//        }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.save(user);
         return "redirect:/login";
